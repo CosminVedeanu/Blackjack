@@ -13,7 +13,7 @@ class Card:
     def __init__(self, suit, rank):
         self.suit = suit
         self.rank = rank
-        self.value= values[rank]
+
     def __str__(self):
         return self.rank + " of " + self.suit
 
@@ -22,18 +22,25 @@ class Deck:
 
     def __init__(self):
 
-        self.all_cards = []
+        self.deck = []
 
         for suit in suits:
             for rank in ranks:
-                created_card = Card(suit, rank)
-                self.all_cards.append(created_card)
+                self.deck.append(Card(suit,rank))
+
+    def __str__(self):
+        deck_comp = ''
+        for card in self.deck:
+            deck_comp+= '\n' + card.__str__()
+        return "The deck has: " + deck_comp
+
+
     def shuffle(self):
-        random.shuffle(self.all_cards)
+        random.shuffle(self.deck)
 
     def deal(self):
-        return self.all_cards.pop()
-
+        single_card  = self.deck.pop()
+        return single_card
 
 class Hand:
     def __init__(self):
@@ -44,10 +51,12 @@ class Hand:
     def add_card(self, card):
         self.cards.append(card)
         self.value +=values[card.rank]
+
         if card.rank == 'Ace':
-            self.aces+=1
+            self.aces += 1
 
     def adjust_for_ace(self):
+
         while self.value > 21 and self.aces:
             self.value -= 10
             self.aces -= 1
@@ -55,33 +64,55 @@ class Hand:
 
 class Chips:
 
-    def __init__(self):
+    def __init__(self, total):
         self.total = 100  # This can be set to a default value or supplied by a user input
         self.bet = 0
 
     def win_bet(self):
-        pass
+        self.total += self.bet
 
     def lose_bet(self):
-        pass
+        self.total -= self.bet
 
 
-def take_bet():
-    pass
+def take_bet(chips):
+    while True:
 
+        try:
+            chips.bet = int(input("How many chips would youi like to bet?"))
+        except:
+            print("Sorry please provide an integer")
+        else:
+            if chips.bet > chips.total:
+                print('Sorry, you do not have enough chips! You have: {}'.format(chips.total))
+            else:
+                break
 
 def hit(deck, hand):
-    pass
+    single_card = deck.deal()
+    hand.add_card(single_card)
+    hand.adjust_for_ace()
 
 
 def hit_or_stand(deck, hand):
     global playing  # to control an upcoming while loop
 
-    pass
+    while True:
+        x = input('Hit or Stand? Enter h or s')
+
+        if x[0].lower() == 'h':
+            hit(deck,hand)
+        elif x[0].lower() == 's':
+            print("Player Stands, Dealer's Turn")
+            playing = False
+        else
+            print("Sorry, please try again.")
+            continue
+        break
 
 
 def show_some(player, dealer):
-    pass
+    
 
 
 def show_all(player, dealer):
